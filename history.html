@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SmartServe AI | Prediction History</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background: #f6fbf7;
+      color: #172033;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      height: 72px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6%;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 800;
+      color: #16a34a;
+    }
+
+    .logo span {
+      color: #172033;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #16a34a;
+    }
+
+    .profile {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #dcfce7;
+      color: #15803d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    /* PAGE LAYOUT */
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 72px);
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 240px;
+      background: white;
+      border-right: 1px solid #e5e7eb;
+      padding: 30px 18px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-title {
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      margin: 0 15px 16px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-menu a {
+      padding: 14px 15px;
+      border-radius: 10px;
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    /* MAIN */
+
+    .main {
+      flex: 1;
+      padding: 40px 5%;
+      min-width: 0;
+    }
+
+    .page-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .page-heading h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .page-heading p {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .new-button {
+      background: #16a34a;
+      color: white;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .new-button:hover {
+      background: #15803d;
+    }
+
+    /* SUMMARY CARDS */
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .summary-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 15px;
+      padding: 22px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
+    }
+
+    .summary-card h4 {
+      color: #64748b;
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-bottom: 13px;
+    }
+
+    .summary-card h2 {
+      font-size: 27px;
+      margin-bottom: 6px;
+    }
+
+    .summary-card p {
+      color: #94a3b8;
+      font-size: 11px;
+    }
+
+    .summary-card.green {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+
+    .summary-card.green h2 {
+      color: #15803d;
+    }
+
+    .summary-card.blue {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .summary-card.blue h2 {
+      color: #2563eb;
+    }
+
+    .summary-card.yellow {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    .summary-card.yellow h2 {
+      color: #b45309;
+    }
+
+    /* CONTENT CARD */
+
+    .card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 17px;
+      padding: 28px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
+      margin-bottom: 25px;
+    }
+
+    .card-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .card-heading h2 {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .card-heading p {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    /* FILTERS */
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filters input,
+    .filters select {
+      padding: 12px 14px;
+      border: 1px solid #dbe3ea;
+      border-radius: 9px;
+      outline: none;
+      font-size: 12px;
+      background: white;
+      color: #172033;
+    }
+
+    .filters input:focus,
+    .filters select:focus {
+      border-color: #16a34a;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .filter-button {
+      border: none;
+      background: #16a34a;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .filter-button:hover {
+      background: #15803d;
+    }
+
+    /* TABLE */
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    .history-table th {
+      text-align: left;
+      padding: 15px 14px;
+      background: #f8fafc;
+      color: #64748b;
+      font-size: 11px;
+      text-transform: uppercase;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .history-table td {
+      padding: 17px 14px;
+      border-bottom: 1px solid #eef2f7;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .history-table tr:hover {
+      background: #f8fffa;
+    }
+
+    .history-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .date {
+      color: #172033;
+      font-weight: 700;
+    }
+
+    .food {
+      color: #172033;
+      font-weight: 600;
+    }
+
+    .small-text {
+      color: #94a3b8;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .status.low {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status.medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status.high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .view-button {
+      color: #16a34a;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .view-button:hover {
+      color: #15803d;
+    }
+
+    /* INSIGHT CARD */
+
+    .insight-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .insight-icon {
+      font-size: 25px;
+    }
+
+    .insight-card h3 {
+      color: #1d4ed8;
+      font-size: 16px;
+      margin-bottom: 7px;
+    }
+
+    .insight-card p {
+      color: #1e40af;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* EMPTY MESSAGE */
+
+    .empty-message {
+      display: none;
+      text-align: center;
+      padding: 35px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .empty-message div {
+      font-size: 35px;
+      margin-bottom: 10px;
+    }
+
+    /* FOOTER */
+
+    .footer {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 12px;
+      padding: 15px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1100px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        width: 75px;
+        padding: 25px 8px;
+      }
+
+      .sidebar-title {
+        display: none;
+      }
+
+      .sidebar-menu a {
+        font-size: 0;
+        text-align: center;
+      }
+
+      .sidebar-menu a::first-letter {
+        font-size: 20px;
+      }
+
+      .main {
+        padding: 25px 18px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .page-heading {
+        flex-direction: column;
+      }
+
+      .new-button {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .card-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .filters {
+        flex-direction: column;
+      }
+
+      .filters input,
+      .filters select,
+      .filter-button {
+        width: 100%;
+      }
+
+      .page-heading h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+
+    <a href="index.html" class="logo">
+      SmartServe<span>AI</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="prediction.html">Prediction</a></li>
+      <li><a href="history.html" class="active">History</a></li>
+    </ul>
+
+    <div class="profile">A</div>
+
+  </nav>
+
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-title">Workspace</div>
+
+      <div class="sidebar-menu">
+        <a href="dashboard.html">▦ Dashboard</a>
+        <a href="prediction.html">＋ New Prediction</a>
+        <a href="history.html" class="active">◷ Prediction History</a>
+        <a href="#">✦ Smart Features</a>
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- PAGE HEADING -->
+      <div class="page-heading">
+
+        <div>
+          <h1>Prediction History</h1>
+          <p>
+            Review previous predictions, actual consumption and food waste trends.
+          </p>
+        </div>
+
+        <a href="prediction.html" class="new-button">
+          + New Prediction
+        </a>
+
+      </div>
+
+
+      <!-- SUMMARY -->
+      <div class="summary-grid">
+
+        <div class="summary-card green">
+          <h4>Total Predictions</h4>
+          <h2>24</h2>
+          <p>Predictions generated</p>
+        </div>
+
+        <div class="summary-card blue">
+          <h4>Average Accuracy</h4>
+          <h2>92%</h2>
+          <p>Based on recent records</p>
+        </div>
+
+        <div class="summary-card yellow">
+          <h4>Total Food Saved</h4>
+          <h2>186 kg</h2>
+          <p>Estimated reduction in waste</p>
+        </div>
+
+        <div class="summary-card">
+          <h4>Average Users</h4>
+          <h2>386</h2>
+          <p>Expected users per day</p>
+        </div>
+
+      </div>
+
+
+      <!-- HISTORY TABLE -->
+      <section class="card">
+
+        <div class="card-heading">
+          <div>
+            <h2>Previous Predictions</h2>
+            <p>Stored records of your daily kitchen predictions.</p>
+          </div>
+        </div>
+
+
+        <!-- FILTERS -->
+        <div class="filters">
+
+          <input
+            type="text"
+            id="searchInput"
+            class="search-box"
+            placeholder="Search by menu or date..."
+          >
+
+          <select id="riskFilter">
+            <option value="all">All Waste Risks</option>
+            <option value="low">Low Risk</option>
+            <option value="medium">Medium Risk</option>
+            <option value="high">High Risk</option>
+          </select>
+
+          <select id="monthFilter">
+            <option value="all">All Months</option>
+            <option value="September">September</option>
+            <option value="August">August</option>
+            <option value="July">July</option>
+          </select>
+
+          <button class="filter-button" onclick="filterHistory()">
+            Apply Filter
+          </button>
+
+        </div>
+
+
+        <!-- TABLE -->
+        <div class="table-wrapper">
+
+          <table class="history-table">
+
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Menu</th>
+                <th>Expected Users</th>
+                <th>Predicted Servings</th>
+                <th>Actual Consumption</th>
+                <th>Waste Risk</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="historyBody">
+
+              <tr data-risk="low" data-month="September">
+                <td>
+                  <div class="date">05 Sep 2026</div>
+                  <div class="small-text">Saturday</div>
+                </td>
+
+                <td>
+                  <div class="food">Rice, Dal, Paneer, Roti</div>
+                  <div class="small-text">Normal weather</div>
+                </td>
+
+                <td>400</td>
+                <td>400 servings</td>
+                <td>385 servings</td>
+
+                <td>
+                  <span class="status low">Low</span>
+                </td>
+
+                <td>
+                  <span class="view-button" onclick="viewRecord('05 Sep 2026')">
+                    View Details
+                  </span>
+                </td>
+              </tr>
+
+
+              <tr data-risk="low" data-month="September">
+                <td>
+                  <div class="date">04 Sep 2026</div>
+                  <div class="small-text">Friday</div>
+                </td>
+
+                <td>
+                  <div class="food">Rice, Dal, Roti</div>
+                  <div class="small-text">Normal weather</div>
+                </td>
+
+                <td>380</td>
+                <td>375 servings</td>
+                <td>365 servings</td>
+
+                <td>
+                  <span class="status low">Low</span>
+                </td>
+
+                <td>
+                  <span class="view-button" onclick="viewRecord('04 Sep 2026')">
+                    View Details
+                  </span>
+                </td>
+              </tr>
+
+
+              <tr data-risk="medium" data-month="September">
+                <td>
+                  <div class="date">03 Sep 2026</div>
+                  <div class="small-text">Thursday</div>
+                </td>
+
+                <td>
+                  <div class="food">Rice, Dal, Paneer</div>
+                  <div class="small-text">College Event</div>
+                </td>
+
+                <td>450</td>
+                <td>475 servings</td>
+                <td>430 servings</td>
+
+                <td>
+                  <span class="status medium">Medium</span>
+                </td>
+
+                <td>
+                  <span class="view-button" onclick="viewRecord('03 Sep 2026')">
+                    View Details
+                  </span>
+                </td>
+              </tr>
+
+
+              <tr data-risk="low" data-month="September">
+                <td>
+                  <div class="date">02 Sep 2026</div>
+                  <div class="small-text">Wednesday</div>
+                </td>
+
+                <td>
+                  <div class="food">Rice, Dal, Roti</div>
+                  <div class="small-text">Rainy weather</div>
+                </td>
+
+                <td>360</td>
+                <td>345 servings</td>
+                <td>338 servings</td>
+
+                <td>
+                  <span class="status low">Low</span>
+                </td>
+
+                <td>
+                  <span class="view-button" onclick="viewRecord('02 Sep 2026')">
+                    View Details
+                  </span>
+                </td>
+              </tr>
+
+
+              <tr data-risk="high" data-month="August">
+                <td>
+                  <div class="date">31 Aug 2026</div>
+                  <div class="small-text">Monday</div>
+                </td>
+
+                <td>
+                  <div class="food">Rice, Dal, Paneer, Roti</div>
+                  <div class="small-text">Festival</div>
+                </td>
+
+                <td>500</td>
+                <td>550 servings</td>
+                <td>455 servings</td>
+
+                <td>
+                  <span class="status high">High</span>
+                </td>
+
+                <td>
+                  <span class="view-button" onclick="viewRecord('31 Aug 2026')">
+                    View Details
+                  </span>
+                </td>
+              </tr>
+
+
+              <tr data-risk="low" data-month="August">
+                <td>
+                  <div class="date">30 Aug 2026</div>
+                  <div class="small-text">Sunday</div>
+                </td>
+
+                <td>
+                  <div class="food">Rice, Dal, Roti</div>
+                  <div class="small-text">Normal weather</div>
+                </td>
+
+                <td>350</td>
+                <td>340 servings</td>
+                <td>332 servings</td>
+
+                <td>
+                  <span class="status low">Low</span>
+                </td>
+
+                <td>
+                  <span class="view-button" onclick="viewRecord('30 Aug 2026')">
+                    View Details
+                  </span>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <div id="emptyMessage" class="empty-message">
+          <div>🔍</div>
+          No prediction records found.
+        </div>
+
+      </section>
+
+
+      <!-- AI INSIGHT -->
+      <section class="card">
+
+        <div class="insight-card">
+
+          <div class="insight-icon">💡</div>
+
+          <div>
+            <h3>AI Learning Insight</h3>
+
+            <p>
+              Your recent records show that actual consumption is usually
+              slightly lower than predicted demand. SmartServe can use these
+              historical records to improve future predictions and reduce
+              unnecessary food preparation.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <div class="footer">
+        SmartServe AI • Predict smarter. Prepare better. Reduce waste.
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <script>
+    function filterHistory() {
+      const searchText =
+        document.getElementById("searchInput").value.toLowerCase();
+
+      const selectedRisk =
+        document.getElementById("riskFilter").value;
+
+      const selectedMonth =
+        document.getElementById("monthFilter").value;
+
+      const rows =
+        document.querySelectorAll("#historyBody tr");
+
+      let visibleRows = 0;
+
+      rows.forEach(function(row) {
+        const rowText = row.textContent.toLowerCase();
+        const rowRisk = row.getAttribute("data-risk");
+        const rowMonth = row.getAttribute("data-month");
+
+        const matchesSearch =
+          rowText.includes(searchText);
+
+        const matchesRisk =
+          selectedRisk === "all" ||
+          rowRisk === selectedRisk;
+
+        const matchesMonth =
+          selectedMonth === "all" ||
+          rowMonth === selectedMonth;
+
+        if (
+          matchesSearch &&
+          matchesRisk &&
+          matchesMonth
+        ) {
+          row.style.display = "";
+          visibleRows++;
+        } else {
+          row.style.display = "none";
+        }
+      });
+
+      const emptyMessage =
+        document.getElementById("emptyMessage");
+
+      if (visibleRows === 0) {
+        emptyMessage.style.display = "block";
+      } else {
+        emptyMessage.style.display = "none";
+      }
+    }
+
+    function viewRecord(date) {
+      alert(
+        "Prediction details for " +
+        date +
+        " will be connected to the database later."
+      );
+    }
+  </script>
+
+  <script src="app.js"></script>
+
+</body>
+</html>

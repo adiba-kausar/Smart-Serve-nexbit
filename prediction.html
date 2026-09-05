@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>SmartServe AI | New Prediction</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --green: #16a34a;
+      --dark-green: #15803d;
+      --light-green: #dcfce7;
+      --very-light-green: #f0fdf4;
+
+      --background: #f8fafc;
+      --white: #ffffff;
+      --text: #172033;
+      --muted: #64748b;
+      --border: #e2e8f0;
+
+      --blue: #2563eb;
+      --light-blue: #dbeafe;
+
+      --yellow: #f59e0b;
+      --light-yellow: #fef3c7;
+
+      --shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background: var(--background);
+      color: var(--text);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      height: 72px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .logo span {
+      color: var(--text);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--green);
+    }
+
+    .profile {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--light-green);
+      color: var(--dark-green);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 800;
+    }
+
+    /* LAYOUT */
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 72px);
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 245px;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      padding: 30px 18px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-heading {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      margin: 0 15px 15px;
+    }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 15px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: var(--light-green);
+      color: var(--dark-green);
+    }
+
+    .sidebar-icon {
+      width: 22px;
+      text-align: center;
+      font-size: 17px;
+    }
+
+    .sidebar-bottom {
+      margin-top: 40px;
+      padding: 18px;
+      border-radius: 14px;
+      background: var(--very-light-green);
+      border: 1px solid #bbf7d0;
+    }
+
+    .sidebar-bottom h4 {
+      color: var(--dark-green);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .sidebar-bottom p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    /* MAIN CONTENT */
+
+    .main-content {
+      flex: 1;
+      padding: 35px 5%;
+      min-width: 0;
+    }
+
+    .page-header {
+      margin-bottom: 28px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+
+    .page-header p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* PROGRESS STEPS */
+
+    .steps {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      max-width: 750px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e2e8f0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .step.active {
+      color: var(--dark-green);
+    }
+
+    .step.active .step-number {
+      background: var(--green);
+      color: white;
+    }
+
+    .step-line {
+      height: 2px;
+      background: var(--border);
+      width: 70px;
+      margin: 0 12px;
+    }
+
+    /* CARD */
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 25px;
+    }
+
+    .card-header {
+      margin-bottom: 25px;
+    }
+
+    .card-header h2 {
+      font-size: 20px;
+      margin-bottom: 7px;
+    }
+
+    .card-header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* FORM */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    label span {
+      color: #ef4444;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-size: 13px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    textarea {
+      min-height: 95px;
+      resize: vertical;
+    }
+
+    .input-help {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .menu-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 5px;
+    }
+
+    .menu-option {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 8px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .menu-option:hover {
+      border-color: var(--green);
+      background: var(--very-light-green);
+    }
+
+    .menu-option.selected {
+      border-color: var(--green);
+      background: var(--light-green);
+      color: var(--dark-green);
+    }
+
+    .menu-option .food-emoji {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    /* BUTTONS */
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .secondary-btn,
+    .primary-btn {
+      border-radius: 10px;
+      padding: 13px 22px;
+      font-size: 13px;
+      font-weight: 700;
+      transition: 0.3s;
+    }
+
+    .secondary-btn {
+      background: white;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .secondary-btn:hover {
+      background: #f8fafc;
+    }
+
+    .primary-btn {
+      border: none;
+      background: var(--green);
+      color: white;
+    }
+
+    .primary-btn:hover {
+      background: var(--dark-green);
+      transform: translateY(-2px);
+    }
+
+    /* INFO BOX */
+
+    .info-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 17px;
+      border-radius: 12px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      margin-bottom: 25px;
+    }
+
+    .info-icon {
+      font-size: 22px;
+    }
+
+    .info-box h4 {
+      color: #1e40af;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .info-box p {
+      color: #1e3a8a;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* RESULT SECTION */
+
+    #resultSection {
+      display: none;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .result-header h2 {
+      font-size: 20px;
+    }
+
+    .success-badge {
+      background: var(--light-green);
+      color: var(--dark-green);
+      padding: 8px 13px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .result-card {
+      padding: 20px;
+      border-radius: 13px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+    }
+
+    .result-card h4 {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .result-card h3 {
+      font-size: 26px;
+      color: var(--text);
+    }
+
+    .result-card p {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .result-card.green {
+      background: var(--very-light-green);
+      border-color: #bbf7d0;
+    }
+
+    .result-card.green h3 {
+      color: var(--dark-green);
+    }
+
+    .result-card.yellow {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    .result-card.yellow h3 {
+      color: #b45309;
+    }
+
+    /* RECOMMENDATION */
+
+    .recommendation-box {
+      background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+      border: 1px solid #bbf7d0;
+      border-radius: 14px;
+      padding: 23px;
+      margin-bottom: 25px;
+    }
+
+    .recommendation-box h3 {
+      color: var(--dark-green);
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .recommendation-box p {
+      color: #4b6355;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .recommendation-number {
+      font-size: 35px;
+      font-weight: 800;
+      color: var(--green);
+      margin-top: 15px;
+    }
+
+    .recommendation-label {
+      color: var(--dark-green);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* RESULT TABLE */
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    .result-table th {
+      text-align: left;
+      padding: 14px;
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-table td {
+      padding: 16px 14px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .food-name {
+      font-weight: 700;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .status.low {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .status.medium {
+      color: #92400e;
+      background: #fef3c7;
+    }
+
+    /* BATCH PROCESS */
+
+    .batch-process {
+      display: flex;
+      gap: 15px;
+      margin-top: 22px;
+    }
+
+    .batch-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+
+    .batch-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 18px;
+      left: 62%;
+      width: 78%;
+      height: 2px;
+      background: #bbf7d0;
+    }
+
+    .batch-circle {
+      width: 36px;
+      height: 36px;
+      margin: auto;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--green);
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+    }
+
+    .batch-step h4 {
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    .batch-step p {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 10px 0 25px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1100px) {
+      .result-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .menu-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 800px) {
+      .nav-links {
+        display: none;
+      }
+
+      .navbar {
+        padding: 0 20px;
+      }
+
+      .sidebar {
+        width: 72px;
+        padding: 25px 8px;
+      }
+
+      .sidebar-heading,
+      .sidebar-menu a span:not(.sidebar-icon),
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .sidebar-menu a {
+        justify-content: center;
+        padding: 14px 8px;
+      }
+
+      .main-content {
+        padding: 25px 18px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full-width {
+        grid-column: auto;
+      }
+
+      .steps {
+        overflow-x: auto;
+      }
+
+      .step-line {
+        width: 30px;
+        margin: 0 7px;
+      }
+
+      .batch-process {
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .batch-step:not(:last-child)::after {
+        display: none;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        padding: 20px;
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header h1 {
+        font-size: 24px;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .primary-btn,
+      .secondary-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      SmartServe<span>AI</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="prediction.html" class="active">Prediction</a></li>
+      <li><a href="history.html">History</a></li>
+    </ul>
+
+    <div class="profile">A</div>
+  </nav>
+
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-heading">Workspace</div>
+
+      <div class="sidebar-menu">
+
+        <a href="dashboard.html">
+          <span class="sidebar-icon">▦</span>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="prediction.html" class="active">
+          <span class="sidebar-icon">＋</span>
+          <span>New Prediction</span>
+        </a>
+
+        <a href="history.html">
+          <span class="sidebar-icon">◷</span>
+          <span>Prediction History</span>
+        </a>
+
+        <a href="#">
+          <span class="sidebar-icon">✦</span>
+          <span>Smart Features</span>
+        </a>
+
+      </div>
+
+      <div class="sidebar-bottom">
+        <h4>Smart Preparation</h4>
+        <p>
+          Use demand predictions to prepare food in batches and reduce waste.
+        </p>
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1>New Food Demand Prediction</h1>
+        <p>
+          Enter today's kitchen details to generate an AI-powered preparation plan.
+        </p>
+      </div>
+
+
+      <!-- STEPS -->
+      <div class="steps">
+
+        <div class="step active">
+          <div class="step-number">1</div>
+          <span>Kitchen Details</span>
+        </div>
+
+        <div class="step-line"></div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <span>AI Prediction</span>
+        </div>
+
+        <div class="step-line"></div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <span>Preparation Plan</span>
+        </div>
+
+      </div>
+
+
+      <!-- INFORMATION BOX -->
+      <div class="info-box">
+        <div class="info-icon">💡</div>
+
+        <div>
+          <h4>How SmartServe works</h4>
+          <p>
+            SmartServe analyzes expected users, menu, weekday, holidays,
+            events, weather and historical consumption to recommend what,
+            how much and when to prepare.
+          </p>
+        </div>
+      </div>
+
+
+      <!-- INPUT FORM -->
+      <section class="card">
+
+        <div class="card-header">
+          <h2>Enter Kitchen Information</h2>
+          <p>Provide the details required for today's prediction.</p>
+        </div>
+
+        <form id="predictionForm">
+
+          <div class="form-grid">
+
+            <!-- EXPECTED USERS -->
+            <div class="form-group">
+              <label for="users">
+                Expected Number of Users <span>*</span>
+              </label>
+
+              <input
+                type="number"
+                id="users"
+                placeholder="Example: 400"
+                min="1"
+                required
+              />
+
+              <div class="input-help">
+                Enter the expected number of people eating today.
+              </div>
+            </div>
+
+
+            <!-- DATE -->
+            <div class="form-group">
+              <label for="date">
+                Prediction Date <span>*</span>
+              </label>
+
+              <input
+                type="date"
+                id="date"
+                required
+              />
+            </div>
+
+
+            <!-- WEEKDAY -->
+            <div class="form-group">
+              <label for="weekday">Weekday</label>
+
+              <select id="weekday">
+                <option value="">Select weekday</option>
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+                <option>Sunday</option>
+              </select>
+            </div>
+
+
+            <!-- EVENT -->
+            <div class="form-group">
+              <label for="event">Holiday or Special Event</label>
+
+              <select id="event">
+                <option value="none">No special event</option>
+                <option value="holiday">Holiday</option>
+                <option value="festival">Festival</option>
+                <option value="college-event">College Event</option>
+                <option value="function">Special Function</option>
+              </select>
+            </div>
+
+
+            <!-- WEATHER -->
+            <div class="form-group">
+              <label for="weather">Weather Condition</label>
+
+              <select id="weather">
+                <option value="normal">Normal</option>
+                <option value="hot">Hot</option>
+                <option value="rainy">Rainy</option>
+                <option value="cold">Cold</option>
+              </select>
+            </div>
+
+
+            <!-- PREVIOUS CONSUMPTION -->
+            <div class="form-group">
+              <label for="previous">
+                Previous Average Consumption
+              </label>
+
+              <input
+                type="number"
+                id="previous"
+                placeholder="Example: 380"
+                min="0"
+              />
+
+              <div class="input-help">
+                Enter the average number of servings consumed previously.
+              </div>
+            </div>
+
+
+            <!-- MENU -->
+            <div class="form-group full-width">
+              <label>Select Today's Menu</label>
+
+              <div class="menu-options">
+
+                <div class="menu-option selected" data-menu="rice">
+                  <span class="food-emoji">🍚</span>
+                  Rice
+                </div>
+
+                <div class="menu-option selected" data-menu="dal">
+                  <span class="food-emoji">🥣</span>
+                  Dal
+                </div>
+
+                <div class="menu-option" data-menu="paneer">
+                  <span class="food-emoji">🧀</span>
+                  Paneer
+                </div>
+
+                <div class="menu-option selected" data-menu="roti">
+                  <span class="food-emoji">🫓</span>
+                  Roti
+                </div>
+
+              </div>
+            </div>
+
+
+            <!-- ADDITIONAL NOTES -->
+            <div class="form-group full-width">
+              <label for="notes">Additional Notes</label>
+
+              <textarea
+                id="notes"
+                placeholder="Example: More students may arrive because of a college event."
+              ></textarea>
+            </div>
+
+          </div>
+
+
+          <div class="form-actions">
+            <button type="reset" class="secondary-btn">
+              Clear Form
+            </button>
+
+            <button type="submit" class="primary-btn">
+              Generate Prediction →
+            </button>
+          </div>
+
+        </form>
+
+      </section>
+
+
+      <!-- RESULT SECTION -->
+      <section id="resultSection">
+
+        <div class="card">
+
+          <div class="result-header">
+            <div>
+              <h2>AI Prediction Result</h2>
+              <p style="color: #64748b; font-size: 13px; margin-top: 5px;">
+                Your smart kitchen preparation plan is ready.
+              </p>
+            </div>
+
+            <div class="success-badge">
+              ✓ Prediction Generated
+            </div>
+          </div>
+
+
+          <!-- RESULT CARDS -->
+          <div class="result-grid">
+
+            <div class="result-card">
+              <h4>Expected Users</h4>
+              <h3 id="resultUsers">400</h3>
+              <p>Expected people</p>
+            </div>
+
+            <div class="result-card green">
+              <h4>Predicted Servings</h4>
+              <h3 id="resultServings">400</h3>
+              <p>Estimated consumption</p>
+            </div>
+
+            <div class="result-card yellow">
+              <h4>Waste Risk</h4>
+              <h3 id="resultRisk">Low</h3>
+              <p>Based on demand factors</p>
+            </div>
+
+            <div class="result-card green">
+              <h4>Estimated Savings</h4>
+              <h3 id="resultSavings">₹2,400</h3>
+              <p>Potential waste reduction</p>
+            </div>
+
+          </div>
+
+
+          <!-- RECOMMENDATION -->
+          <div class="recommendation-box">
+
+            <h3>Smart Preparation Recommendation</h3>
+
+            <p>
+              Do not prepare all food at once. Start with the first batch,
+              monitor actual consumption and prepare more only if required.
+            </p>
+
+            <div class="recommendation-number" id="firstBatch">
+              250
+            </div>
+
+            <div class="recommendation-label">
+              servings recommended for the first batch
+            </div>
+
+          </div>
+
+
+          <!-- ITEM-WISE TABLE -->
+          <h3 style="font-size: 18px; margin-bottom: 15px;">
+            Item-wise Preparation Plan
+          </h3>
+
+          <div class="table-wrapper">
+
+            <table class="result-table">
+
+              <thead>
+                <tr>
+                  <th>Food Item</th>
+                  <th>Predicted Quantity</th>
+                  <th>First Batch</th>
+                  <th>Additional Quantity</th>
+                  <th>Waste Risk</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td class="food-name">🍚 Rice</td>
+                  <td id="riceTotal">400 servings</td>
+                  <td id="riceFirst">250 servings</td>
+                  <td>100–150 servings</td>
+                  <td><span class="status low">Low</span></td>
+                </tr>
+
+                <tr>
+                  <td class="food-name">🥣 Dal</td>
+                  <td id="dalTotal">400 servings</td>
+                  <td id="dalFirst">250 servings</td>
+                  <td>100–150 servings</td>
+                  <td><span class="status low">Low</span></td>
+                </tr>
+
+                <tr>
+                  <td class="food-name">🧀 Paneer</td>
+                  <td id="paneerTotal">400 servings</td>
+                  <td id="paneerFirst">220 servings</td>
+                  <td>100–180 servings</td>
+                  <td><span class="status medium">Medium</span></td>
+                </tr>
+
+                <tr>
+                  <td class="food-name">🫓 Roti</td>
+                  <td id="rotiTotal">400 servings</td>
+                  <td id="rotiFirst">250 servings</td>
+                  <td>100–150 servings</td>
+                  <td><span class="status low">Low</span></td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+
+        <!-- ADAPTIVE BATCH COOKING -->
+        <div class="card">
+
+          <div class="card-header">
+            <h2>Adaptive Batch Cooking</h2>
+            <p>
+              Prepare more only when demand is high.
+            </p>
+          </div>
+
+          <div class="batch-process">
+
+            <div class="batch-step">
+              <div class="batch-circle">1</div>
+              <h4>Predict</h4>
+              <p>AI predicts<br>food demand</p>
+            </div>
+
+            <div class="batch-step">
+              <div class="batch-circle">2</div>
+              <h4>Prepare First Batch</h4>
+              <p>Start with<br>250 servings</p>
+            </div>
+
+            <div class="batch-step">
+              <div class="batch-circle">3</div>
+              <h4>Monitor Demand</h4>
+              <p>Check actual<br>consumption</p>
+            </div>
+
+            <div class="batch-step">
+              <div class="batch-circle">4</div>
+              <h4>Prepare More</h4>
+              <p>Add more food<br>only if needed</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <div class="footer-note">
+        SmartServe AI • Predict smarter. Prepare better. Reduce waste.
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <script>
+    // Set today's date automatically
+    const dateInput = document.getElementById("date");
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    dateInput.value = `${year}-${month}-${day}`;
+
+
+    // Select weekday automatically
+    const weekdaySelect = document.getElementById("weekday");
+
+    const weekdays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ];
+
+    weekdaySelect.value = weekdays[today.getDay()];
+
+
+    // Menu selection
+    const menuOptions = document.querySelectorAll(".menu-option");
+
+    menuOptions.forEach(option => {
+      option.addEventListener("click", () => {
+        option.classList.toggle("selected");
+      });
+    });
+
+
+    // Prediction form
+    const predictionForm = document.getElementById("predictionForm");
+    const resultSection = document.getElementById("resultSection");
+
+    predictionForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const usersInput = document.getElementById("users").value;
+      const previousInput = document.getElementById("previous").value;
+
+      const users = Number(usersInput);
+      const previous = Number(previousInput) || users;
+
+      if (!users || users < 1) {
+        alert("Please enter the expected number of users.");
+        return;
+      }
+
+      /*
+        Demo prediction logic.
+
+        Later, this section can be replaced with a fetch()
+        request to your Python/Flask backend.
+      */
+
+      let predictedServings = Math.round(
+        users * 0.95 + previous * 0.05
+      );
+
+      const eventValue = document.getElementById("event").value;
+      const weatherValue = document.getElementById("weather").value;
+
+      if (eventValue !== "none") {
+        predictedServings = Math.round(predictedServings * 1.08);
+      }
+
+      if (weatherValue === "hot") {
+        predictedServings = Math.round(predictedServings * 0.97);
+      }
+
+      if (weatherValue === "rainy") {
+        predictedServings = Math.round(predictedServings * 0.95);
+      }
+
+      const firstBatch = Math.round(predictedServings * 0.625);
+      const additionalQuantity = predictedServings - firstBatch;
+
+      let wasteRisk = "Low";
+
+      if (predictedServings > users * 1.1) {
+        wasteRisk = "Medium";
+      }
+
+      if (predictedServings > users * 1.2) {
+        wasteRisk = "High";
+      }
+
+      const estimatedSavings = Math.round(
+        Math.max(0, predictedServings - firstBatch) * 16
+      );
+
+
+      // Display result
+      document.getElementById("resultUsers").textContent = users;
+      document.getElementById("resultServings").textContent = predictedServings;
+      document.getElementById("resultRisk").textContent = wasteRisk;
+      document.getElementById("resultSavings").textContent =
+        "₹" + estimatedSavings.toLocaleString("en-IN");
+
+      document.getElementById("firstBatch").textContent = firstBatch;
+
+
+      // Update table
+      document.getElementById("riceTotal").textContent =
+        predictedServings + " servings";
+
+      document.getElementById("dalTotal").textContent =
+        predictedServings + " servings";
+
+      document.getElementById("paneerTotal").textContent =
+        predictedServings + " servings";
+
+      document.getElementById("rotiTotal").textContent =
+        predictedServings + " servings";
+
+      document.getElementById("riceFirst").textContent =
+        firstBatch + " servings";
+
+      document.getElementById("dalFirst").textContent =
+        firstBatch + " servings";
+
+      document.getElementById("paneerFirst").textContent =
+        Math.round(firstBatch * 0.88) + " servings";
+
+      document.getElementById("rotiFirst").textContent =
+        firstBatch + " servings";
+
+
+      // Show result
+      resultSection.style.display = "block";
+
+      resultSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  </script>
+
+  <script src="app.js"></script>
+
+  <script src="prediction.js"></script>
+</body>
+</html>
